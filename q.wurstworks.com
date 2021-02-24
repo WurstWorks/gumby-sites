@@ -4,6 +4,8 @@ server {
     access_log  /var/log/nginx/q.wurstworks.com-access.log;
     error_log   /var/log/nginx/q.wurstworks.com-error.log;
 
+    include snippets/security.conf;
+
     location / {
         proxy_set_header    Host $host;
         proxy_set_header    X-Real-IP $remote_addr;
@@ -17,7 +19,8 @@ server {
     }
 
 
-    listen 443 ssl; # managed by Certbot
+    listen 443 ssl http2; # managed by Certbot
+    listen [::]:443 ssl http2; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/q.wurstworks.com/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/q.wurstworks.com/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
@@ -32,7 +35,8 @@ server {
 
 
     server_name q.wurstworks.com;
-    listen 80;
+    listen 80 http2;
+    listen [::]:80 http2;
     return 404; # managed by Certbot
 
 
